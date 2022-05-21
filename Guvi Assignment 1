@@ -1,0 +1,104 @@
+from getpass import getpass
+import re 
+def password():      
+    password = getpass("Enter your Password : ")
+    pw = password
+    flag=0        
+    if (len(password)<5):
+        flag = -1
+    elif (len(password)>16):
+        flag = -1
+    elif not re.search("[a-z]", password):
+        flag = -1
+    elif not re.search("[A-Z]", password):
+        flag = -1 
+    elif not re.search("[0-9]", password):
+        flag = -1
+    elif not re.search("[_@$]", password):
+        flag = -1
+    elif re.search("\s", password):
+        flag = -1
+    else:
+        flag = 0 
+        print('''Valid Password. 
+                 Congrats . Your Registration completed. ''')   
+        return pw
+    if flag == -1:
+        print(" Not a Valid Password ")
+        getdata()
+        
+def getdata():
+    pw = password()
+    return pw
+    
+def get1data(a):
+    username(a)
+
+def username(a):
+    regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+    un = input("Enter your Email id : ")
+    if(re.search(regex,un)):
+        print(''' Note : Password length shoulr above 5 and below 16, 
+              Must have minimum one special character,
+              one number, one uppercase, one lowercase charactor''')
+        pw = getdata()
+        if a == 1:
+            file(un,pw)
+    else:
+        print("Invalid Email id , Kindly check it and enter ")
+        get1data(a)   
+
+def file(un,pw):  
+    f = open(un +".txt", "w")
+    f.write(un+" "+pw)
+    f.close()
+        
+def wp():
+    l = input("Enter your Email id : ")
+    f = open(l+".txt", "r")
+    ref1 = f.read().split()
+    
+    if l== ref1[0]:
+        print("Your password is : " , ref1[1])
+        logind()
+    else:
+        print("User name does not exist")
+    
+def logind():
+    try:
+        l = input("Enter your Email id : ")
+        f = open(l+".txt", "r")
+        ref = f.read().split()    
+        if l== ref[0]:
+            p = getpass("Enter your password")
+            if p == ref[1]:
+                print("You login succesfully")
+            else:
+                print("You entered wrong password")
+                wp()
+        else:
+            print("Kindly enter correct user name ")
+            
+    except FileNotFoundError:
+        print('File is not present in this system')
+        logind()
+   
+    
+def opt():
+    a = int(input())
+    if a ==1:
+        get1data(a)
+    elif a==2:
+        print("you have selected login!!Login working process")
+        logind() 
+    else:
+        print ("Choose correct choice")
+        print ( "Press 1 for Registration Press 2 for Login ")
+        opt()
+             
+print ( ''' Hi, Welcome 
+           Enter Your Selection
+           Press 1 for Registration 
+           Press 2 for Login ''')
+
+opt()
