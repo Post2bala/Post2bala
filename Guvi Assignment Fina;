@@ -1,0 +1,293 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.feature_extraction.text import CountVectorizer
+#vect = CountVectorizer()
+path = "/content/drive/MyDrive/guvi/project-proposal/final-project/spam.csv"
+dataset=pd.read_csv('train-chennai-sale.csv')
+dataset.head()
+dataset.describe()
+dataset.shape.
+dataset.isnull().sum()
+dataset['N_BATHROOM'].fillna(dataset['N_BATHROOM'].mode()[0],inplace=True)
+dataset['N_BEDROOM'].fillna(dataset['N_BEDROOM'].mode()[0],inplace=True)
+dataset.QS_OVERALL = dataset.QS_OVERALL.fillna(dataset.QS_OVERALL.mean())
+dataset=dataset.drop_duplicates()
+dataset.shape.
+dataset.isnull().sum()
+df=dataset.drop(['PRT_ID','REG_FEE','COMMIS'],axis=1)
+df.dtypes
+df['N_BEDROOM']=df['N_BEDROOM'].astype(int)
+df['N_BATHROOM']=df['QS_BATHROOM'].astype(int)
+df.dtypes
+print(df['AREA'].unique())
+print(df['SALE_COND'].unique())
+print(df['PARK_FACIL'].unique())
+print(df['BUILDTYPE'].unique())
+print(df['UTILITY_AVAIL'].unique())
+print(df['STREET'].unique())
+print(df['MZZONE'].unique())
+df.loc[df["AREA"] == "Karapakam", "AREA"] = 'Karapakkam'
+
+df.loc[df["AREA"] == "Ana Nagar", "AREA"] = 'Anna Nagar'
+
+df.loc[df["AREA"] == "Adyr", "AREA"] = 'Adyar'
+
+df.loc[df["AREA"] == "Ann Nagar", "AREA"] = 'Anna Nagar'
+
+df.loc[df["AREA"] == "Chormpet", "AREA"] = 'Chrompet'
+
+df.loc[df["AREA"] == "Chrompt", "AREA"] = 'Chrompet'
+
+df.loc[df["AREA"] == "Chrmpet", "AREA"] = 'Chrompet'
+
+df.loc[df["AREA"] == "KKNagar", "AREA"] = 'KK Nagar'
+
+df.loc[df["AREA"] == "TNagar", "AREA"] = 'T Nagar'
+
+df.loc[df["AREA"] == "Velchery", "AREA"] = 'Velachery'
+
+df.loc[df["SALE_COND"] == 'Ab Normal', 'SALE_COND'] = 'AbNormal'
+
+df.loc[df['SALE_COND']=='Partiall','SALE_COND']='Partial'
+
+df.loc[df['SALE_COND']=='PartiaLl','SALE_COND']='Partial'
+
+df.loc[df['SALE_COND']=='Adj Land','SALE_COND']='AdjLand'
+
+df.loc[df['PARK_FACIL']=='Noo','PARK_FACIL']='No'
+
+df.loc[df['BUILDTYPE']=='Other','BUILDTYPE']='Others'
+
+df.loc[df['BUILDTYPE']=='Comercial','BUILDTYPE']='Commercial'
+
+df.loc[df['UTILITY_AVAIL']=='AllPub','UTILITY_AVAIL']='All Pub'
+
+df.loc[df['UTILITY_AVAIL']=='NoSeWa','UTILITY_AVAIL']='NoSewr'
+
+df.loc[df['UTILITY_AVAIL']=='NoSewr ','UTILITY_AVAIL']='NoSewr'
+
+#df['AREA'].replace(['NoSeWa'],'NoSewr ',inplace=True)
+
+df.loc[df['STREET']=='Pavd','STREET']='Paved'
+
+df.loc[df['STREET']=='NoAccess','STREET']='No Access'
+print(df['AREA'].unique())
+print(df['SALE_COND'].unique())
+print(df['PARK_FACIL'].unique())
+print(df['BUILDTYPE'].unique())
+print(df['UTILITY_AVAIL'].unique())
+print(df['STREET'].unique())
+print(df['MZZONE'].unique())
+y=df['DATE_BUILD'].str[6:]
+ser = pd.Series(y)
+year=pd.to_numeric(ser, downcast ='signed')
+Age=2022-year
+df['Age']=Age #Age column added to df
+print(df['Age'].sort_values().unique())
+SALE_YEAR=df['DATE_SALE'].str[6:]
+SALE_YEAR.sort_values().unique()
+df['SALE_YEAR']=SALE_YEAR
+df['SALE_YEAR']=df['SALE_YEAR'].astype(int)
+print(df['SALE_YEAR'].sort_values().unique())
+df.columns
+sns.boxplot(df['SALES_PRICE'])
+sns.boxplot(df['Age'])
+area_in_order=df.groupby('AREA')['SALES_PRICE'].mean().reset_index().sort_values('SALES_PRICE')['AREA']
+sns.barplot(x='AREA',y='SALES_PRICE',data=df,order=area_in_order)
+plt.xticks(rotation=45)
+df.groupby('AREA')['SALES_PRICE'].mean().sort_values().plot()
+ area_in_order=df.groupby('SALE_COND')['SALES_PRICE'].mean().reset_index().sort_values('SALES_PRICE')['SALE_COND']
+ sns.barplot(x='SALE_COND',y='SALES_PRICE',data=df,order=area_in_order)
+plt.xticks(rotation=45)
+df.groupby('SALE_COND')['SALES_PRICE'].mean().sort_values().plot()
+ buildtype_in_order=df.groupby('BUILDTYPE')['SALES_PRICE'].mean().reset_index().sort_values('SALES_PRICE')['BUILDTYPE']   
+ sns.barplot(x='BUILDTYPE',y='SALES_PRICE',data=df,order=buildtype_in_order)
+plt.xticks(rotation=45)
+df.groupby('BUILDTYPE')['SALES_PRICE'].mean().sort_values().plot()
+utility_in_order=df.groupby('UTILITY_AVAIL')['SALES_PRICE'].mean().reset_index().sort_values('SALES_PRICE')['UTILITY_AVAIL']
+sns.barplot(x='UTILITY_AVAIL',y='SALES_PRICE',data=df,order=utility_in_order)
+plt.xticks(rotation=45)
+parkfacil_in_order=df.groupby('PARK_FACIL')['SALES_PRICE'].mean().reset_index().sort_values('SALES_PRICE')['PARK_FACIL']
+sns.barplot(x='PARK_FACIL',y='SALES_PRICE',data=df,order=parkfacil_in_order)
+plt.xticks(rotation=45)
+street_in_order=df.groupby('STREET')['SALES_PRICE'].mean().reset_index().sort_values('SALES_PRICE')['STREET'] 
+sns.barplot(x='STREET',y='SALES_PRICE',data=df,order=street_in_order)
+plt.xticks(rotation=45)
+df.groupby('STREET')['SALES_PRICE'].mean().sort_values().plot()
+mzone_in_order=df.groupby('MZZONE')['SALES_PRICE'].mean().reset_index().sort_values('SALES_PRICE')['MZZONE'] 
+sns.barplot(x='MZZONE',y='SALES_PRICE',data=df,order=mzone_in_order)
+plt.xticks(rotation=45)
+n_bedrooms_in_order=df.groupby('N_BEDROOM')['SALES_PRICE'].mean().reset_index().sort_values('SALES_PRICE')['N_BEDROOM'] 
+n_bathroom_in_order=df.groupby('N_BATHROOM')['SALES_PRICE'].mean().reset_index().sort_values('SALES_PRICE')['N_BATHROOM'] 
+n_room_in_order=df.groupby('N_ROOM')['SALES_PRICE'].mean().reset_index().sort_values('SALES_PRICE')['N_ROOM'] 
+sns.barplot(x='N_BEDROOM',y='SALES_PRICE',data=df,order=n_bedrooms_in_order)
+plt.xticks(rotation=45)
+sns.barplot(x='N_BATHROOM',y='SALES_PRICE',data=df,order=n_bathroom_in_order)
+plt.xticks(rotation=45)
+sns.barplot(x='N_ROOM',y='SALES_PRICE',data=df,order=n_room_in_order)
+plt.xticks(rotation=45)
+x=df['INT_SQFT']
+y=df['SALES_PRICE']
+plt.scatter(x, y)
+plt.show()
+df.groupby('INT_SQFT')['SALES_PRICE'].mean().sort_values().plot()
+x=df['DIST_MAINROAD']
+y=df['SALES_PRICE']
+plt.scatter(x, y)
+plt.show()
+df.groupby('DIST_MAINROAD')['SALES_PRICE'].mean().sort_values().plot()
+df.groupby('UTILITY_AVAIL')['SALES_PRICE'].mean().sort_values().plot()
+df.groupby('QS_ROOMS')['SALES_PRICE'].mean().sort_values().plot()
+df.groupby('QS_BATHROOM')['SALES_PRICE'].mean().sort_values().plot()
+df.groupby('QS_BEDROOM')['SALES_PRICE'].mean().sort_values().plot()
+df.groupby('QS_OVERALL')['SALES_PRICE'].mean().sort_values().plot()
+df.groupby('Age')['SALES_PRICE'].mean().sort_values().plot()
+df.groupby('Age')['SALES_PRICE'].mean().sort_values().plot()
+sales_year_in_order=df.groupby('SALE_YEAR')['SALES_PRICE'].mean().reset_index().sort_values('SALES_PRICE')['SALE_YEAR'] 
+sns.barplot(x='SALE_YEAR',y='SALES_PRICE',data=df,order=sales_year_in_order)
+plt.xticks(rotation=45)
+df.groupby('SALE_YEAR')['SALES_PRICE'].mean().sort_values().plot()
+df['AREA']=df['AREA'].map({'Karapakkam':0,'Adyar':1,'Chrompet':2,'Velachery':3,'KK Nagar':4,'Anna Nagar':5,'T Nagar':6,})
+df['AREA']
+df['SALE_COND']=df['SALE_COND'].map({'Partial':0,'Family': 1,'AbNormal':2,'Normal Sale':3,'AdjLand':4})
+df['SALE_COND']
+df['PARK_FACIL']=df['PARK_FACIL'].map({'Yes':1,'No':0})
+df['PARK_FACIL']
+df['STREET']=df['STREET'].map({'Gravel':1,'No Access':0,'Paved':1})
+df['STREET']
+df['MZZONE']=df['MZZONE'].map({'A':0,'C':1,'I':2,'RH':4,'RL':5,'RM':6})
+df['MZZONE']
+df = pd.get_dummies(df, columns = ['BUILDTYPE', 'UTILITY_AVAIL'])
+df.head()
+df.columns
+X=df[['AREA','INT_SQFT','N_BEDROOM','N_BATHROOM','N_ROOM','SALE_COND','PARK_FACIL','STREET','MZZONE','BUILDTYPE_Commercial','BUILDTYPE_House','BUILDTYPE_Others','UTILITY_AVAIL_All Pub','UTILITY_AVAIL_ELO','UTILITY_AVAIL_NoSewr']]
+X.shape
+X.isnull().sum()
+X.head()
+y=df['SALES_PRICE']
+rom sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3,random_state=8)
+from sklearn.preprocessing import StandardScaler
+scaler=StandardScaler()
+X_train= scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+from sklearn.linear_model import LinearRegression #importing all the required functions
+regressor = LinearRegression() # spredicted score = m * hours + c  
+regressor.fit(X_train, y_train)
+print(regressor.intercept_) # c
+coeff_df=pd.DataFrame(regressor.coef_,['AREA','INT_SQFT','N_BEDROOM','N_BATHROOM','N_ROOM','SALE_COND','PARK_FACIL','STREET','MZZONE','BUILDTYPE_Commercial','BUILDTYPE_House','BUILDTYPE_Others','UTILITY_AVAIL_All Pub','UTILITY_AVAIL_ELO','UTILITY_AVAIL_NoSewr'], columns=['Coefficient'])
+coeff_df
+y_pred = regressor.predict(X_test) 
+ldf = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred,'Error': y_pred - y_test})
+ldf
+from sklearn import metrics
+print('Linear Regression R2- SCORE:', metrics.r2_score(y_test,y_pred))
+from sklearn.neighbors import KNeighborsRegressor
+
+knn_model = KNeighborsRegressor()
+
+knn_model.fit(X_train,y_train)
+# Predictions
+knnpreds = knn_model.predict(X_test)
+
+# Performance
+performance = pd.DataFrame({ 'Actual': y_test,
+                            'Predicted': knnpreds,
+                            'Error': y_test - knnpreds})
+# View
+performance
+from sklearn.model_selection import cross_val_score
+for i in [1,2,3,4,5,6,7,8,9,10,20,50]:
+    knn = KNeighborsRegressor(i) #initialising the model
+    knn.fit(X_train,y_train) # training the model
+    print("K value  : " , i, " train score : ", knn.score(X_train,y_train) , " test score : ", knn.score(X_test,y_test) , " score : ", np.mean(cross_va
+    from sklearn.neighbors import KNeighborsRegressor
+
+knn_model = KNeighborsRegressor(n_neighbors=4).fit(X_train, y_train)
+
+# Score
+score_knn = knn_model.score(X_test, y_test)
+
+print('According to cross validation score Best KNN model :k=4')
+print(score_knn)
+from sklearn.tree import DecisionTreeClassifier
+dt = DecisionTreeClassifier(max_depth = 6)
+# Fit dt to the training set
+dt.fit(X_train, y_train)
+importance = dt.feature_importances_
+importance
+idf=pd.DataFrame(importance,['AREA','INT_SQFT','N_BEDROOM','N_BATHROOM','N_ROOM','SALE_COND','PARK_FACIL','STREET','MZZONE','BUILDTYPE_Commercial','BUILDTYPE_House','BUILDTYPE_Others','UTILITY_AVAIL_All Pub','UTILITY_AVAIL_ELO','UTILITY_AVAIL_NoSewr'], columns=['IMPORTANCE'])
+idf
+from sklearn.tree import DecisionTreeRegressor
+
+# Instantiate dt
+dt = DecisionTreeRegressor()
+
+# Fit dt to the training set
+dt.fit(X_train, y_train)
+dy_pred=dt.predict(X_test)
+dy_pred
+performance = pd.DataFrame({ 'Actual': y_test,
+                            'Predicted': dy_pred,
+                            'Error': dy_pred - y_test})
+# View
+performance
+from sklearn.metrics import  r2_score
+
+# Compute y_pred
+dy_pred = dt.predict(X_test)
+
+# Compute mse_dt
+rsquared = r2_score(y_test,dy_pred)
+# Compute rmse_dt
+print('r2_score of decision regressor :',rsquared)
+
+# Print rmse_dt
+#print("Test set R2 of dt: {:.2f}".format(rsquared))
+from sklearn.model_selection import cross_val_score 
+import numpy as np
+for depth in [1,2,3,4,5,6,7,8,9,10,20,50,75,100]:
+    dt = DecisionTreeRegressor(max_depth=depth) 
+    dt.fit(X_train, y_train)
+    trainAccuracy = r2_score(y_train, dt.predict(X_train)) 
+  
+    valAccuracy = cross_val_score(dt, X_train, y_train, cv=10)
+    print("Depth  : ", depth, " Training Accuracy : ", trainAccuracy, " Cross val score : " ,np.mean(valAccuracy))
+    # Fitting Random Forest Regression to the dataset
+# import the regressor
+from sklearn.ensemble import RandomForestRegressor
+  
+ # create regressor object
+regressor = RandomForestRegressor(n_estimators = 1000, random_state = 10)
+  
+# fit the regressor with x and y data
+regressor.fit(X_train, y_train) 
+rf_pred=regressor.predict(X_test)
+rf_pred
+decisiontree_prediction=pd.DataFrame({'Actual': y_test, 'Predicted': rf_pred,'Diffrence':rf_pred-y_test})
+decisiontree_prediction
+rfscore = r2_score(y_test,rf_pred)
+# Compute rmse_dtrfscore
+print('r2_score of decision regressor :',rfscore)
+import xgboost as xg
+
+from sklearn.metrics import mean_squared_error as MSE
+  
+
+xgb_r = xg.XGBRegressor(objective ='reg:linear',
+                  n_estimators = 1000, seed = 123)
+  
+# Fitting the model
+xgb_r.fit(X_train, y_train)
+  
+# Predict the model
+xgpred = xgb_r.predict(X_test)
+  
+xgbooster_prediction=pd.DataFrame({'Actual': y_test, 'Predicted': xgpred,'Diffrence':xgpred-y_test})
+xgbooster_prediction
+[09:53:29] WARNING: C:/Users/administrator/workspace/xgboost-win64_release_1.6.0/src/objective/regression_obj.cu:203: reg:linear is now deprecated in favor of reg:squarederror.
+xgscore = r2_score(y_test,xgpred)
+# Compute rmse_dtrfscore
+print('r2_score of decision regressor :',xgscore)
